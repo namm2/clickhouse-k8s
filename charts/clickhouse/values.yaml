@@ -216,6 +216,12 @@ clickhouse:
     runAsGroup: 101
     fsGroup: 101
 
+
+  # -- Security context for Clickhouse container
+  # @section -- Clickhouse Configuration
+  container:
+    securityContext: {}
+
   # Service account configuration
   serviceAccount:
     # -- Create a service account for ClickHouse
