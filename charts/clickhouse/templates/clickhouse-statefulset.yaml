@@ -26,6 +26,9 @@ spec:
         shard: "{{ $shard }}"
       annotations:
         checksum/config: {{ include (print $.Template.BasePath "/clickhouse-configmap.yaml") $ | sha256sum }}
+        {{- if and (not $.Values.clickhouse.additionalUsers.existingSecret) $.Values.clickhouse.additionalUsers.content }}
+        checksum/users: {{ include (print $.Template.BasePath "/clickhouse-usersd-secret.yaml") $ | sha256sum }}
+        {{- end }}
     spec:
       serviceAccountName: {{ include "clickhouse.serviceAccountName" $ }}
       {{- with $.Values.clickhouse.securityContext }}
