@@ -2,10 +2,8 @@ name: Release Charts
 
 on:
   push:
-    branches:
-      - main
-    paths:
-      - 'charts/**'
+    tags:
+      - "*"
 
 jobs:
   release:
@@ -23,9 +21,13 @@ jobs:
           git config user.name "$GITHUB_ACTOR"
           git config user.email "$GITHUB_ACTOR@users.noreply.github.com"
 
-      - name: Run chart-releaser
-        uses: helm/chart-releaser-action@v1.7.0
-        env:
-          CR_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
-          CR_GENERATE_RELEASE_NOTES: true
-          CR_SKIP_EXISTING: true
+      - name: Helm OCI Chart Releaser
+        uses: appany/helm-oci-chart-releaser@v0.5.0
+        with:
+          name: clickhouse
+          repository: ${{ github.repository }}
+          tag: ${{ github.ref_name }}
+          path: charts/clickhouse
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
